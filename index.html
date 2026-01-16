@@ -42,9 +42,17 @@
             for ( let j = 0; j <= 128; ++ j ) {
                 texts.push(String.fromCodePoint(0x2500+j)); 
             }
-            for ( let j = 0; j <= 128; ++ j ) {
+
+            // All arrow characters unicode 2190-21FF (7 rows 16 options: 112)
+            for ( let j = 0; j <= 112; ++ j ) {
                 texts.push(String.fromCodePoint(0x2190+j)); 
             }
+
+            // All block element characters unicode 2580-259F (2 rows 16 options: 32)
+            for ( let j = 0; j <= 32; ++ j ) {
+                texts.push(String.fromCodePoint(0x2580+j)); 
+            }
+            
 
             // Get the DIV container
             const container = document.getElementById('copy-container');
