@@ -14,7 +14,7 @@
             text-align: center;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 10vh;
+            font-size: 10vmin;
             transition: all 0.2s;
             aspect-ratio: 1/1;
             width: 10%;
@@ -28,12 +28,36 @@
             font-family: "F0xProto";
         }
         @import url(https://db.onlinewebfonts.com/c/e8e7a20efd02fd010b6634a4d4cfbc8b?family=F0xProto);
+
+        .scroll-top {
+            position: fixed;
+            bottom: 1vmin;
+            left: 44vw;
+            margin: auto;
+            text-align: center;
+            display: none;
+            width: 12vw;
+            height: 12vw;
+            background: #ff6b35;
+            color: #fef9f3;
+            border: solid 1vmin #fef9f3;
+            border-radius: 50%;
+            font-size: 5vmin;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .scroll-top:hover {
+            background: #ff8555;
+        }
         </style>
     </head>
 
     <body>
         <div id="copy-container"></div>
-        <button onclick="resetUse">↺</button>
+        <button id="scrollTop" class="scroll-top">↑</button>
+        <button id="reset-use">↺</button>
         <script>
             // Text for each DIV element, for copying 
             const texts = [];
@@ -82,21 +106,31 @@
                 el.addEventListener('click', () => {
                     navigator.clipboard.writeText(el.textContent); 
                     el.classList.add('copied'); 
-                    setTimeout(() => el.classList.remove('copied'), 500);
+                    setTimeout(() => el.classList.remove('copied'), 1000);
                     uses[el.textContent] += 1;
                     
                     localStorage.setItem('charUsage', JSON.stringify(uses));
-                    elementList
-                        .sort((a, b) => Number(uses[b.textContent]) - Number(uses[a.textContent]))
-                        .forEach(div => container.appendChild(div));
+                    
+                    setTimeout(() => {
+                        elementList
+                            .sort((a, b) => Number(uses[b.textContent]) - Number(uses[a.textContent]))
+                            .forEach(div => container.appendChild(div));
+                    }, 500);
                 });
             });
 
-            function resetUse() {
-                for ( let value of Object.values(uses) ) {
-                    value = 0;
-                });
-            }
+
+            // Scroll to top button
+            const btn = document.getElementById('scrollTop');
+
+            window.addEventListener('scroll', () => {
+              btn.style.display = window.scrollY > 300 ? 'block' : 'none';
+            });
+
+            btn.addEventListener('click', () => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
         </script>
     </body>
 </html>
