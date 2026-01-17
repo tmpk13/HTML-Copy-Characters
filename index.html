@@ -37,28 +37,29 @@
         <script>
             // Text for each DIV element, for copying 
             const texts = [];
-            let uses = {};
+            let uses = JSON.parse(localStorage.getItem('charUsage')) || {};
 
             // All box drawing characters unicode 2500-257F (8 rows 16 options: 128)
             for ( let j = 0; j <= 128; ++ j ) {
                 let char = String.fromCodePoint(0x2500+j);
                 texts.push(char); 
-                uses[char] = 0;
             }
 
             // All arrow characters unicode 2190-21FF (7 rows 16 options: 112)
             for ( let j = 0; j <= 112; ++ j ) {
                 let char = String.fromCodePoint(0x2190+j);
-                texts.push(String.fromCodePoint(0x2190+j)); 
-                uses[char] = 0;
+                texts.push(char); 
             }
 
             // All block element characters unicode 2580-259F (2 rows 16 options: 32)
             for ( let j = 0; j <= 32; ++ j ) {
                 let char = String.fromCodePoint(0x2580+j);
-                texts.push(String.fromCodePoint(0x2580+j)); 
-                uses[char] = 0;
+                texts.push(char); 
             }
+
+            texts.forEach(char => {
+                if (!(char in uses)) uses[char] = 0;
+            });
             
 
             // Get the DIV container
@@ -82,14 +83,15 @@
                     navigator.clipboard.writeText(el.textContent); 
                     el.classList.add('copied'); 
                     setTimeout(() => el.classList.remove('copied'), 500);
-                    if (el.textContent in uses) {
-                        uses[el.textContent] += 1;
-                        elementList
-                            .sort((a, b) => Number(uses[b.textContent]) - Number(uses[a.textContent]))
-                            .forEach(div => container.appendChild(div));
-                    }
+                    uses[el.textContent] += 1;
+                    
+                    localStorage.setItem('charUsage', JSON.stringify(uses));
+                    elementList
+                        .sort((a, b) => Number(uses[b.textContent]) - Number(uses[a.textContent]))
+                        .forEach(div => container.appendChild(div));
                 });
             });
+
         </script>
     </body>
 </html>
