@@ -82,8 +82,9 @@
                     navigator.clipboard.writeText(el.textContent); 
                     el.classList.add('copied'); 
                     setTimeout(() => el.classList.remove('copied'), 500);
-                    
-                    uses.push(0);
+                    if (el.textContent in uses) {
+                        uses[el.textContent] = 0;
+                    }
                 });
             });
         </script>
