@@ -64,18 +64,18 @@ container.addEventListener('click', e => {
     uses[el.textContent] += 1;
     
     localStorage.setItem('charUsage', JSON.stringify(uses));
-    
-    sortGrid();
+
+    e.target.style.order = -uses[e.target.textContent];
 });
 
 
 // Scroll to top button
-const btn = document.getElementById('scrollTop');
+const scrollBtn = document.getElementById('scrollTop');
 
 window.addEventListener('scroll', () => {
-    btn.style.display = window.scrollY > 300 ? 'block' : 'none';
+    scrollBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
 });
 
-btn.addEventListener('click', () => {
+scrollBtn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
