@@ -33,7 +33,7 @@
 
     <body>
         <div id="copy-container"></div>
-        
+        <button onclick="resetUse()">
         <script>
             // Text for each DIV element, for copying 
             const texts = [];
@@ -92,6 +92,11 @@
                 });
             });
 
+            function resetUse() {
+                for ( let value of Object.values(uses) ) {
+                    value = 0;
+                });
+            }
         </script>
     </body>
 </html>
