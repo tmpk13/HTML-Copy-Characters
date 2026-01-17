@@ -71,10 +71,6 @@
                 el.textContent = text;
                 container.appendChild(el);
             });
-
-            divs
-              .sort((a, b) => Number(a.textContent) - Number(b.textContent))
-              .forEach(div => container.appendChild(div));
             
             // Get all copy boxes
             const elements = document.querySelectorAll('.copy-box');
