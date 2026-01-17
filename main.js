@@ -1,5 +1,5 @@
+// Text for each DIV element, for copying
 
-// Text for each DIV element, for copying 
 const texts = [];
 let uses = JSON.parse(localStorage.getItem('charUsage')) || {};
 
@@ -35,6 +35,7 @@ texts.forEach(text => {
     el.className = 'copy-box';
     el.textContent = text;
     container.appendChild(el);
+    el.style.order = -uses[text];
 });
 
 // Get all copy boxes
