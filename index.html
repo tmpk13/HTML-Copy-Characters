@@ -71,11 +71,14 @@
                 el.textContent = text;
                 container.appendChild(el);
             });
-            
+
+            divs
+              .sort((a, b) => Number(a.textContent) - Number(b.textContent))
+              .forEach(div => container.appendChild(div));
             
             // Get all copy boxes
             const elements = document.querySelectorAll('.copy-box');
-
+            
             // Add event listener for each copy box
             elements.forEach(el => {
                 el.addEventListener('click', () => {
@@ -83,7 +86,10 @@
                     el.classList.add('copied'); 
                     setTimeout(() => el.classList.remove('copied'), 500);
                     if (el.textContent in uses) {
-                        uses[el.textContent] = 0;
+                        uses[el.textContent] += 1;
+                        elements
+                            .sort((a, b) => Number(a.textContent) - Number(b.textContent))
+                            .forEach(div => container.appendChild(div));
                     }
                 });
             });
