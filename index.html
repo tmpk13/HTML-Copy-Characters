@@ -84,7 +84,7 @@
                     setTimeout(() => el.classList.remove('copied'), 500);
                     if (el.textContent in uses) {
                         uses[el.textContent] += 1;
-                        elements
+                        elementList
                             .sort((a, b) => Number(a.textContent) - Number(b.textContent))
                             .forEach(div => container.appendChild(div));
                     }
