@@ -85,7 +85,7 @@
                     if (el.textContent in uses) {
                         uses[el.textContent] += 1;
                         elementList
-                            .sort((a, b) => Number(a.textContent) - Number(b.textContent))
+                            .sort((a, b) => Number(uses[a.textContent]) - Number(uses[b.textContent]))
                             .forEach(div => container.appendChild(div));
                     }
                 });
