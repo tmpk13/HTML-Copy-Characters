@@ -15,6 +15,12 @@ for ( let j = 0; j <= 112; ++ j ) {
     texts.push(char); 
 }
 
+// All shape characters unicode 25A0-25FF (6 rows 16 options: 96)
+for ( let j = 0; j <= 96; ++ j ) {
+    let char = String.fromCodePoint(0x25A0+j);
+    texts.push(char); 
+}
+
 // All block element characters unicode 2580-259F (2 rows 16 options: 32)
 for ( let j = 0; j <= 32; ++ j ) {
     let char = String.fromCodePoint(0x2580+j);
