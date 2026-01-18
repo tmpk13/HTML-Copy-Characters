@@ -31,34 +31,64 @@ texts.forEach(char => {
     if (!(char in uses)) uses[char] = 0;
 });
 
+// --> END UNICODE CHARACTER SETUP
+
+
+
+
 
 // Get the DIV container
 const container = document.getElementById('copy-container');
+const children = container.children;
 
-// Create each DIV and set the content
-texts.forEach(text => {
-    const el = document.createElement('div');
+let childrenCount = 20;
+// Create each DIV
+for ( let i = 0; i < childrenCount; ++i ) {
+    let el = document.createElement('div');
     el.className = 'copy-box';
+    let text = texts[i];
     el.textContent = text;
-    container.appendChild(el);
     el.style.order = -uses[text];
+    container.appendChild(el);
+}
+
+function getChars(list, start, end) {
+    let charCount = texts.length;
+    if (start > charCount) {
+        start = childrenCount;
+    }
+    if (end > charCount) {
+        end = childrenCount;
+    }
+    if (start === end) {
+        return [" "];
+    }
+    return list.slice(start, end);
+}
+
+//
+function setChars(children, position) {
+    console.log("setChars");
+    let i = 0;
+    for (const child of children) {
+        child.textContent = texts[position+i];
+        i++;
+    }
+}
+
+let position = 0;
+let ticking = false;
+container.addEventListener("scroll", (event) => {
+    if (!ticking) {
+        setTimeout(() => {
+            ticking = true;
+            position += childrenCount;
+            if (position > texts.length) { position = 0; }
+            setChars(children, position, childrenCount);
+        }, 20);
+    }
 });
 
-// Get all copy boxes
-const elements = document.querySelectorAll('.copy-box');
-const elementList = Array.from(elements);
-
-
-// Sort after delay
-let sortTimeout;
-function sortGrid(timeout=500) {
-    clearTimeout(sortTimeout);
-    sortTimeout = setTimeout(() => {
-        elementList
-            .sort((a, b) => Number(uses[b.textContent]) - Number(uses[a.textContent]))
-            .forEach(div => container.appendChild(div));
-    }, timeout);
-}
 
 // Container grid on click
 container.addEventListener('click', e => {
@@ -72,7 +102,9 @@ container.addEventListener('click', e => {
     
     localStorage.setItem('charUsage', JSON.stringify(uses));
 
-    e.target.style.order = -uses[e.target.textContent];
+    sortTimeout = setTimeout(() => {
+        e.target.style.order = -uses[e.target.textContent];
+    }, 500);
 });
 
 
