@@ -78,10 +78,12 @@ function setChars(children, position) {
 
 let position = 0;
 let ticking = false;
-container.addEventListener("scroll", (event) => {
+window.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
     if (!ticking) {
+        ticking = true;
         setTimeout(() => {
-            ticking = true;
+            ticking = false;
             position += childrenCount;
             if (position > texts.length) { position = 0; }
             setChars(children, position, childrenCount);
@@ -109,12 +111,12 @@ container.addEventListener('click', e => {
 
 
 // Scroll to top button
-const scrollBtn = document.getElementById('scrollTop');
+// const scrollBtn = document.getElementById('scrollTop');
 
-window.addEventListener('scroll', () => {
-    scrollBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
-});
+// window.addEventListener('scroll', () => {
+//     scrollBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
+// });
 
-scrollBtn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-});
+// scrollBtn.addEventListener('click', () => {
+//     window.scrollTo({ top: 0, behavior: 'smooth' });
+// });
