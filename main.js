@@ -99,7 +99,7 @@ function setChars(children, position) {
 let position = 0;
 let ticking = false;
 function cycleChars(e, dir=1) {
-    if (!e.target.classList.contains("copy-box")) return;
+    if (!e.target.classList.contains("copy-box") && !e.target.id === "copy-container") return;
 
     e.preventDefault();
 
@@ -128,6 +128,25 @@ window.addEventListener("contextmenu", (e) => {
 
 
 
+let sortTimeout = null;
+function sortChars(charToCheck) {
+    if (Math.min(...topChars.map((x)=> x[1])) < uses[charToCheck]) {
+        if (sortTimeout) clearTimeout(sortTimeout);
+        sortTimeout = setTimeout(() => {
+            topChars = getTopChars(favoriteChildrenCount);
+            for ( let i = 0; i < favoriteChildrenCount; ++i ) {
+                children[i].textContent = topChars[i][0];
+            }
+        }, 500);
+    }
+}
+
+
+container.addEventListener('dblclick', e => {
+    const el = e.target;
+    uses[el.textContent] = topChars[0][1]+1;
+    sortChars(el.textContent);
+});
 // Container grid on click
 container.addEventListener('click', e => {
     if (!e.target.classList.contains('copy-box')) return;
@@ -139,17 +158,9 @@ container.addEventListener('click', e => {
     uses[el.textContent] += 1;
     
     localStorage.setItem('charUsage', JSON.stringify(uses));
-
-       console.log(topChars);
-    if (e.target.classList.contains("sorted")) {
-        if (Math.min(...topChars.map((x)=> x[1])) < uses[el.textContent])
-        sortTimeout = setTimeout(() => {
-            topChars = getTopChars(favoriteChildrenCount);
-                for ( let i = 0; i < favoriteChildrenCount; ++i ) {
-                    children[i].textContent = topChars[i][0];
-                }
-        }, 500);
-    }
+    console.log(topChars);
+    sortChars(el);    
+        
 });
 
 
@@ -157,5 +168,5 @@ container.addEventListener('click', e => {
 const resetBtn = document.getElementById('reset-use');
 
 resetBtn.addEventListener('click', () => {
-    for ( let k in Object.keys(uses)) uses[k] = 0;
+    localStorage.setItem('charUsage', JSON.stringify({}));
 });
