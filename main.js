@@ -41,14 +41,33 @@ texts.forEach(char => {
 const container = document.getElementById('copy-container');
 const children = container.children;
 
+function getTopChars(count) {
+    return Object.entries(uses).sort((a, b)=>{ return b[1] - a[1]; }).slice(0, count)
+}
+
+
+let favoriteChildrenCount = 5;
+
+let topChars = getTopChars(favoriteChildrenCount);
+
+for ( let i = 0; i < favoriteChildrenCount; ++i ) {
+    let el = document.createElement('div');
+    el.className = 'copy-box';
+    el.classList.add('sorted');
+    let text = topChars[i][0];
+    el.textContent = text;
+    el.style.order = -uses[text];
+    container.appendChild(el);
+}
+
 let childrenCount = 20;
-// Create each DIV
+// Create each copy DIV, for unsorted characters
 for ( let i = 0; i < childrenCount; ++i ) {
     let el = document.createElement('div');
     el.className = 'copy-box';
     let text = texts[i];
     el.textContent = text;
-    el.style.order = -uses[text];
+    
     container.appendChild(el);
 }
 
@@ -68,29 +87,49 @@ function getChars(list, start, end) {
 
 //
 function setChars(children, position) {
-    console.log("setChars");
     let i = 0;
     for (const child of children) {
-        child.textContent = texts[position+i];
-        i++;
+        if (!child.classList.contains("sorted")) {
+            child.textContent = texts[position+i];
+            i++;
+        }
     }
 }
 
 let position = 0;
 let ticking = false;
-window.addEventListener("contextmenu", (e) => {
+function cycleChars(e, dir=1) {
+    if (!e.target.classList.contains("copy-box")) return;
+
     e.preventDefault();
+
     if (!ticking) {
         ticking = true;
         setTimeout(() => {
             ticking = false;
-            position += childrenCount;
+            position += childrenCount*dir;
             if (position > texts.length) { position = 0; }
+            if (position < 0) { position = texts.length; }
             setChars(children, position, childrenCount);
         }, 20);
     }
-});
+}
 
+const cBBox = container.getBoundingClientRect();
+
+window.addEventListener("touchmove", (e) => { cycleChars(e); });
+window.addEventListener("contextmenu", (e) => {
+    if ( event.clientX < cBBox.right/2  ) { cycleChars(e, -1) }
+    else {
+        cycleChars(e);
+    }
+ });
+
+
+
+resetBtn.addEventListener('click', () => {
+    for ( let k in Object.keys(uses)) uses[k] = 0;
+});
 
 // Container grid on click
 container.addEventListener('click', e => {
@@ -104,19 +143,22 @@ container.addEventListener('click', e => {
     
     localStorage.setItem('charUsage', JSON.stringify(uses));
 
-    sortTimeout = setTimeout(() => {
-        e.target.style.order = -uses[e.target.textContent];
-    }, 500);
+       console.log(topChars);
+    if (e.target.classList.contains("sorted")) {
+        if (Math.min(...topChars.map((x)=> x[1])) < uses[el.textContent])
+        sortTimeout = setTimeout(() => {
+            topChars = getTopChars(favoriteChildrenCount);
+                for ( let i = 0; i < favoriteChildrenCount; ++i ) {
+                    children[i].textContent = topChars[i][0];
+                }
+        }, 500);
+    }
 });
 
 
-// Scroll to top button
-// const scrollBtn = document.getElementById('scrollTop');
+// Reset usesage button
+const resetBtn = document.getElementById('reset-use');
 
-// window.addEventListener('scroll', () => {
-//     scrollBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
-// });
-
-// scrollBtn.addEventListener('click', () => {
-//     window.scrollTo({ top: 0, behavior: 'smooth' });
-// });
+resetBtn.addEventListener('click', () => {
+    for ( let k in Object.keys(uses)) uses[k] = 0;
+});
