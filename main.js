@@ -127,9 +127,6 @@ window.addEventListener("contextmenu", (e) => {
 
 
 
-resetBtn.addEventListener('click', () => {
-    for ( let k in Object.keys(uses)) uses[k] = 0;
-});
 
 // Container grid on click
 container.addEventListener('click', e => {
