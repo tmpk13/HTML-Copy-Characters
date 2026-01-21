@@ -46,7 +46,7 @@ function getTopChars(count) {
 }
 
 
-let favoriteChildrenCount = 5;
+let favoriteChildrenCount = 10;
 
 let topChars = getTopChars(favoriteChildrenCount);
 
